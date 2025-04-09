@@ -1,101 +1,128 @@
+
 (function () {
-    // Add some basic styles
-    const style = document.createElement("style");
-    style.textContent = `
-      .widget-form-container {
-        font-family: sans-serif;
-        padding: 1rem;
-        max-width: 400px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        background: #f9f9f9;
-      }
-      .widget-form-container input {
-        width: 100%;
-        padding: 0.5rem;
-        margin-bottom: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-      .widget-form-container button {
-        padding: 0.5rem 1rem;
-        background: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-      .widget-form-success {
-        color: green;
-        font-weight: bold;
-      }
-      .widget-form-error {
-        color: red;
-        font-size: 0.9rem;
-      }
-    `;
-    document.head.appendChild(style);
+  // Styles
+  const style = document.createElement("style");
+  style.textContent = `
+    .call-widget-container {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 420px;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      background: linear-gradient(135deg, #ffffff, #f1f1f1);
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
 
-    // Create form container
-    const container = document.createElement("div");
-    container.className = "widget-form-container";
-    container.innerHTML = `
-      <form id="widgetForm">
-        <input type="text" id="widgetName" placeholder="Your Name" required />
-        <input type="email" id="widgetEmail" placeholder="Your Email" required />
-        <div class="widget-form-error" id="formError"></div>
-        <button type="submit">Submit</button>
-      </form>
-      <div class="widget-form-success" id="formSuccess" style="display: none;"></div>
-    `;
+    .call-widget-container h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      color: #333;
+    }
 
-    document.body.appendChild(container);
+    .call-widget-container input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
 
-    // Handle form logic
-    const form = container.querySelector("#widgetForm");
-    const errorDiv = container.querySelector("#formError");
-    const successDiv = container.querySelector("#formSuccess");
+    .call-widget-container button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        errorDiv.textContent = "";
-        successDiv.style.display = "none";
+    .call-widget-container button:hover {
+      background-color: #218838;
+    }
 
-        const name = form.querySelector("#widgetName").value.trim();
-        const email = form.querySelector("#widgetEmail").value.trim();
+    .call-widget-message {
+      margin-top: 1rem;
+      font-weight: bold;
+      text-align: center;
+    }
 
-        // Basic validation
-        if (!name || !email) {
-            errorDiv.textContent = "Please enter both name and email.";
-            return;
+    .call-widget-message.success {
+      color: #28a745;
+    }
+
+    .call-widget-message.error {
+      color: #dc3545;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // HTML
+  const container = document.createElement("div");
+  container.className = "call-widget-container";
+  container.innerHTML = `
+    <h2>Make a Call</h2>
+    <form id="callForm">
+      <input type="text" id="caller" placeholder="Caller Number (e.g., 09032491755)" required />
+      <input type="text" id="callee" placeholder="Callee Number (e.g., 2342015230052)" required />
+      <button type="submit">Call Now</button>
+    </form>
+    <div class="call-widget-message" id="callMessage"></div>
+  `;
+  document.getElementById("callWidget").appendChild(container);
+
+  // Script
+  const form = document.getElementById("callForm");
+  const msg = document.getElementById("callMessage");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    msg.textContent = "";
+    msg.className = "call-widget-message";
+
+    const caller = document.getElementById("caller").value.trim();
+    const callee = document.getElementById("callee").value.trim();
+
+    if (!caller || !callee) {
+      msg.textContent = "Both caller and callee are required.";
+      msg.classList.add("error");
+      return;
+    }
+
+    // Make the API request (adjust URL and token as needed)
+    fetch("http://bigpvoiceopt.test/api/callvoice", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer WBBvHNbBNrZ1wNW9JM738UmuVt0d4XPBAoBJHJeJdHRKuHuaHURk1g6SSVBbdrpidouDCO"
+      },
+      body: new FormData(Object.assign(
+        document.createElement('form'),
+        {
+          elements: [
+            Object.assign(document.createElement('input'), { name: 'caller', value: caller }),
+            Object.assign(document.createElement('input'), { name: 'callee', value: callee })
+          ]
         }
-
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            errorDiv.textContent = "Invalid email address.";
-            return;
+      ))
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === true || data.success === true) {
+          msg.textContent = data.message || "Call initiated successfully!";
+          msg.classList.add("success");
+          form.reset();
+        } else {
+          msg.textContent = data.message || "Call could not be initiated.";
+          msg.classList.add("error");
         }
-
-        // Send to server
-        fetch("https://yourserver.com/api/form-submit", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ name, email }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.status === true) {
-                    successDiv.textContent =
-                        data.message || "Form submitted successfully!";
-                    successDiv.style.display = "block";
-                    form.reset();
-                } else {
-                    errorDiv.textContent = data.message || "Something went wrong.";
-                }
-            })
-            .catch((err) => {
-                errorDiv.textContent = "Error connecting to server.";
-            });
-    });
+      })
+      .catch(err => {
+        console.error(err);
+        msg.textContent = "An error occurred while connecting to the server.";
+        msg.classList.add("error");
+      });
+  });
 })();
