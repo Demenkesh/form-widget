@@ -41,7 +41,7 @@
     container.className = "widget-form-container";
     container.innerHTML = `
       <form id="widgetForm">
-        <input type="text" id="widgetName" placeholder="Your Names" required />
+        <input type="text" id="widgetName" placeholder=" Names" required />
         <input type="email" id="widgetEmail" placeholder="Your Emails" required />
         <div class="widget-form-error" id="formError"></div>
         <button type="submit">Submit</button>
