@@ -84,13 +84,13 @@ function initWidget(apiKey) {
       `;
       document.head.appendChild(style);
 
-      // HTML for the modals
+      // HTML for the modals work on the modal , if queue background it still active keep counting , else show the moadl for adding otp to verify it ,and once done clear all the input and hide the main form , then it will be a blank screen.
       document.body.insertAdjacentHTML(
         "beforeend",
         `
         <div id="callSuccessModal" class="modal">
           <div class="modal-content">
-            <h3>Call in Progress</h3>
+            <h3>Call in Progress </h3>
             <p id="countdownText">Time remaining: <span id="timer">00:30</span></p>
             <button id="tryAgainBtn" style="display: none;">Try Again</button>
           </div>
@@ -146,8 +146,8 @@ function initWidget(apiKey) {
       container.innerHTML = `
         <h2>Make a Call</h2>
         <form id="callForm">
-          <input type="text" id="caller" placeholder="Caller Number (e.g., Recipient)" required />
-          <input type="text" id="callee" placeholder="Callee Number (e.g., Sender)" required />
+          <input type="text" id="callee" placeholder="Caller Number (e.g., Recipient)" required />
+          <input type="text" id="caller" placeholder="Callee Number (e.g., Sender)" required />
           <button type="submit">Call Now</button>
         </form>
       `;
