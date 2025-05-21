@@ -146,8 +146,8 @@ function initWidget(apiKey) {
       container.innerHTML = `
         <h2>Make a Call</h2>
         <form id="callForm">
-          <input type="text" id="callee" placeholder="Caller Number (e.g., Recipient)" required />
-          <input type="text" id="caller" placeholder="Callee Number (e.g., Sender)" required />
+          <input type="text" id="caller" placeholder="Caller Number (e.g., Sender)" required />
+          <input type="text" id="callee" placeholder="Callee Number (e.g., Recipient)" required />
           <button type="submit">Call Now</button>
         </form>
       `;
