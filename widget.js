@@ -148,7 +148,7 @@ function initWidget(apiKey) {
         <form id="callForm">
           <input type="text" id="caller" placeholder="Caller Number (e.g., Sender)" required />
           <input type="text" id="callee" placeholder="Callee Number (e.g., Recipient)" required />
-          <button type="submit">Call Now</button>
+          <button type="submit">Request Otp By Call</button>
         </form>
       `;
       (document.getElementById("callWidget") || document.body).appendChild(
@@ -316,3 +316,4 @@ function initWidget(apiKey) {
     });
   })();
 }
+// https://bigture.com.ng/assets/js/widget.js
